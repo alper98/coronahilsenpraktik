@@ -16,6 +16,8 @@ import "firebase/auth";
 import "firebase/firestore";
 
 function Header({ user }) {
+  const db = firebase.firestore();
+
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
@@ -25,15 +27,6 @@ function Header({ user }) {
   const [userPhotoUrl, setUserPhotoUrl] = user.userPhotoUrl;
   const [userName, setUserName] = user.userName;
   const [authProvider, setAuthProvider] = user.authProvider;
-
-  function loggedInUser() {
-    return (
-      <div>
-        <h2>Velkommen {userName}</h2>
-        <Avatar alt="Remy Sharp" src={userPhotoUrl} className={classes.large} />
-      </div>
-    );
-  }
 
   function signOut() {
     firebase
@@ -60,22 +53,31 @@ function Header({ user }) {
       .auth()
       .signInWithPopup(provider)
       .then(function (result) {
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
         // The signed-in user info.
         var user = result.user;
-        console.log(user);
-        // ...
-
         setUserPhotoUrl(user.photoURL);
         setUserName(user.displayName);
         setUserId(user.uid);
         setAuthProvider(user.providerData[0].providerId);
         console.log(userName, "Logged in from Facebook");
         setAuthExists(true);
+
+        // getting votes from user logged in
+
+        db.collection("users")
+          .doc(user.uid)
+          .get()
+          .then((response) => {
+            setUserVotes(response.data().votes);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+        // ...
       })
       .catch(function (error) {
-        console.log(error);
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -83,7 +85,6 @@ function Header({ user }) {
         var email = error.email;
         // The firebase.auth.AuthCredential type that was used.
         var credential = error.credential;
-        // ...
       });
   }
 
@@ -109,6 +110,59 @@ function Header({ user }) {
         console.log(userName, "Logged in from Google");
         setAuthExists(true);
 
+        // getting votes from user logged in
+        db.collection("users")
+          .doc(user.uid)
+          .get()
+          .then((response) => {
+            setUserVotes(response.data().votes);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+        // ...
+      })
+      .catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+      });
+  }
+
+  function twitterLogin() {
+    var provider = new firebase.auth.TwitterAuthProvider();
+    provider.setCustomParameters({
+      display: "popup",
+    });
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(function (result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // The signed-in user info.
+        var user = result.user;
+        setUserPhotoUrl(user.photoURL);
+        setUserName(user.displayName);
+        setUserId(user.uid);
+        setAuthProvider(user.providerData[0].providerId);
+        console.log(userName, "Logged in from Twitter");
+        setAuthExists(true);
+
+        // getting votes from user logged in
+        db.collection("users")
+          .doc(user.uid)
+          .get()
+          .then((response) => {
+            setUserVotes(response.data().votes);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
         // ...
       })
       .catch(function (error) {
@@ -127,11 +181,11 @@ function Header({ user }) {
       <Grid container justify="center">
         <Grid container justify="center">
           <Grid container justify="center">
-            <h2 className={classes.headerTitle}>Coronahilsen</h2>
+            <h1 className={classes.headerTitle}>Coronahilsen</h1>
           </Grid>
-          <h3 className={classes.headerTitle}>
+          <h2 className={classes.subHeaderTitle}>
             Log ind, og stem på din favorit hilsen
-          </h3>
+          </h2>
         </Grid>
         <Grid container justify="center">
           <Grid
@@ -164,7 +218,7 @@ function Header({ user }) {
               style={{ width: 300 }}
               className={classes.loginOption}
               onClick={() => {
-                alert("todo: twitter login");
+                twitterLogin();
               }}
             >
               <span>Log ind med Twitter</span>
@@ -177,9 +231,17 @@ function Header({ user }) {
     return (
       <Grid container justify="center">
         <Grid container justify="center">
-          <h2 className={classes.headerTitle}>Coronahilsen</h2>
+          <h1 className={classes.headerTitle}>Coronahilsen</h1>
         </Grid>
-        <h3 className={classes.loggedInAsTitle}>Logget ind som {userName}</h3>
+        <h2 className={classes.loggedInAsTitle}>{userName}</h2>
+        <img src={userPhotoUrl} className={classes.profilePic}></img>
+        <h3 className={classes.logOut}>
+          Log ud{" "}
+          <ExitToAppIcon className={classes.logOutIcon} onClick={signOut} />
+        </h3>
+        <Grid container justify="center">
+          <h2 className={classes.subHeaderTitle}>Stem på din favorit hilsen</h2>
+        </Grid>
       </Grid>
     );
   }

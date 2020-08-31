@@ -8,7 +8,7 @@ export default {
     marginTop: "0",
   },
   loginOptionContainer: {
-    maxWidth: "1200px",
+    maxWidth: "1500px",
     padding: "3rem 0",
   },
 
@@ -23,10 +23,22 @@ export default {
   },
   headerTitle: {
     marginBottom: "0",
-    fontFamily: "Playfair Display",
+  },
+  subHeaderTitle: {
+    marginBottom: "4",
+    fontStyle: "italic",
   },
   loggedInAsTitle: {
     marginBottom: "4",
-    fontFamily: "Playfair Display",
+  },
+  profilePic: {
+    marginTop: "16px",
+    marginLeft: "10px",
+    height: 40,
+    width: 40,
+    borderRadius: "128px",
+  },
+  logOut: {
+    marginLeft: "20px",
   },
 };

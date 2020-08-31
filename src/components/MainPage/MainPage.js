@@ -3,7 +3,6 @@ import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import styles from "./MainPage.styles.js";
 import Greetings from "../Greetings";
-import Footer from "../Footer";
 import Header from "../Header";
 
 import * as firebase from "firebase/app";
@@ -25,6 +24,7 @@ function MainPage({ user }) {
         .collection("greetings")
         .get()
         .catch((err) => console.log(err));
+
       if (collection) {
         var greetings_temp = [];
         collection.forEach((doc) => {
@@ -54,7 +54,6 @@ function MainPage({ user }) {
           ))}
         </Grid>
       </Grid>
-      <Footer />
     </>
   );
 }
