@@ -55,6 +55,7 @@ function Header({ user }) {
       .then(function (result) {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
+        console.log(token);
         // The signed-in user info.
         var user = result.user;
         setUserPhotoUrl(user.photoURL);
@@ -101,6 +102,8 @@ function Header({ user }) {
       .then(function (result) {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
+        console.log(token);
+
         // The signed-in user info.
         var user = result.user;
         setUserPhotoUrl(user.photoURL);
@@ -142,6 +145,7 @@ function Header({ user }) {
       .auth()
       .signInWithPopup(provider)
       .then(function (result) {
+        console.log(result);
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
         // The signed-in user info.
@@ -196,7 +200,7 @@ function Header({ user }) {
             justify="center"
           >
             <GoogleLoginButton
-              style={{ width: 300, paddingTop: 0 }}
+              style={{ width: 300, paddingTop: 0, borderRadius: "16px" }}
               className={classes.loginOption}
               onClick={() => {
                 googleLogin();
@@ -206,7 +210,7 @@ function Header({ user }) {
             </GoogleLoginButton>
 
             <FacebookLoginButton
-              style={{ width: 300 }}
+              style={{ width: 300, paddingTop: 0, borderRadius: "16px" }}
               className={classes.loginOption}
               onClick={() => {
                 facebookLogin();
@@ -215,7 +219,7 @@ function Header({ user }) {
               <span>Log ind med Facebook</span>
             </FacebookLoginButton>
             <TwitterLoginButton
-              style={{ width: 300 }}
+              style={{ width: 300, paddingTop: 0, borderRadius: "16px" }}
               className={classes.loginOption}
               onClick={() => {
                 twitterLogin();
@@ -233,15 +237,19 @@ function Header({ user }) {
         <Grid container justify="center">
           <h1 className={classes.headerTitle}>Coronahilsen</h1>
         </Grid>
-        <h2 className={classes.loggedInAsTitle}>{userName}</h2>
-        <img src={userPhotoUrl} className={classes.profilePic}></img>
-        <h3 className={classes.logOut}>
-          Log ud{" "}
-          <ExitToAppIcon className={classes.logOutIcon} onClick={signOut} />
-        </h3>
         <Grid container justify="center">
           <h2 className={classes.subHeaderTitle}>Stem på din favorit hilsen</h2>
         </Grid>
+        <div className={classes.userInfo}>
+          <div className={classes.userNameAndProfilePic}>
+            <h2 className={classes.loggedInAsTitle}>{userName} </h2>
+            <img src={userPhotoUrl} className={classes.profilePic} />
+          </div>
+          <div className={classes.logOutBox} onClick={signOut}>
+            <h3 className={classes.logOutText}>Log ud</h3>
+            <ExitToAppIcon className={classes.logOutIcon} />
+          </div>
+        </div>
       </Grid>
     );
   }

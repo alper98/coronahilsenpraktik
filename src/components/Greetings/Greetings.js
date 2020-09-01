@@ -20,8 +20,6 @@ function Greetings({ greetings, user }) {
   const [greetingLiked, setGreetingLiked] = useState("");
   const [greetingId, setGreetingId] = useState("");
 
-  require.context("../../static", true, /\.mp4$/);
-
   const url = greetings.data().url;
   const name = greetings.data().name;
   const beskrivelse = greetings.data().beskrivelse;
@@ -84,7 +82,7 @@ function Greetings({ greetings, user }) {
 
   // function for decrementering af stemmer
   function decrementVote() {
-    if (authExists) {
+    if (authExists && userVotes.includes(greetings.id)) {
       db.collection("greetings")
         .doc(greetings.id)
         .update({
@@ -103,7 +101,7 @@ function Greetings({ greetings, user }) {
         <Typography variant="h5" className={classes.nameOfGreeting}>
           {name}
         </Typography>
-        <CardContent>
+        <CardContent style={{ padding: 0, height: 55 }}>
           <Typography variant="body2" color="textSecondary" component="p">
             {beskrivelse}
           </Typography>
