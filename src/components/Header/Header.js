@@ -34,6 +34,7 @@ function Header({ user }) {
       .signOut()
       .then(function () {
         console.log("Signout successful.");
+        sessionStorage.setItem("auth", false);
         setAuthExists(false);
         setUserId("");
         setUserVotes([]);
@@ -180,7 +181,30 @@ function Header({ user }) {
       });
   }
 
-  if (!authExists) {
+  function UserInfo() {
+    return (
+      <Grid container justify="center">
+        <Grid container justify="center">
+          <h1 className={classes.headerTitle}>Coronahilsen</h1>
+        </Grid>
+        <Grid container justify="center">
+          <h2 className={classes.subHeaderTitle}>Stem på din favorit hilsen</h2>
+        </Grid>
+        <div className={classes.userInfo}>
+          <div className={classes.userNameAndProfilePic}>
+            <h2 className={classes.loggedInAsTitle}>{userName} </h2>
+            <img src={userPhotoUrl} className={classes.profilePic} />
+          </div>
+          <div className={classes.logOutBox} onClick={signOut}>
+            <h3 className={classes.logOutText}>Log ud</h3>
+            <ExitToAppIcon className={classes.logOutIcon} />
+          </div>
+        </div>
+      </Grid>
+    );
+  }
+
+  function LoginOptions() {
     return (
       <Grid container justify="center">
         <Grid container justify="center">
@@ -200,7 +224,11 @@ function Header({ user }) {
             justify="center"
           >
             <GoogleLoginButton
-              style={{ width: 300, paddingTop: 0, borderRadius: "16px" }}
+              style={{
+                width: 300,
+                paddingTop: 0,
+                borderRadius: "16px",
+              }}
               className={classes.loginOption}
               onClick={() => {
                 googleLogin();
@@ -231,27 +259,13 @@ function Header({ user }) {
         </Grid>
       </Grid>
     );
+  }
+
+  console.log(authExists);
+  if (!authExists) {
+    return <LoginOptions />;
   } else {
-    return (
-      <Grid container justify="center">
-        <Grid container justify="center">
-          <h1 className={classes.headerTitle}>Coronahilsen</h1>
-        </Grid>
-        <Grid container justify="center">
-          <h2 className={classes.subHeaderTitle}>Stem på din favorit hilsen</h2>
-        </Grid>
-        <div className={classes.userInfo}>
-          <div className={classes.userNameAndProfilePic}>
-            <h2 className={classes.loggedInAsTitle}>{userName} </h2>
-            <img src={userPhotoUrl} className={classes.profilePic} />
-          </div>
-          <div className={classes.logOutBox} onClick={signOut}>
-            <h3 className={classes.logOutText}>Log ud</h3>
-            <ExitToAppIcon className={classes.logOutIcon} />
-          </div>
-        </div>
-      </Grid>
-    );
+    return <UserInfo />;
   }
 }
 

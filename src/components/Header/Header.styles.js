@@ -3,7 +3,6 @@ export default {
     maxWidth: "1500px",
     padding: "3rem 0",
   },
-
   profileOmråde: {
     padding: "3rem 0",
     border: "2px solid black",
