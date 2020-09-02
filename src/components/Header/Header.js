@@ -34,7 +34,6 @@ function Header({ user }) {
       .signOut()
       .then(function () {
         console.log("Signout successful.");
-        sessionStorage.setItem("auth", false);
         setAuthExists(false);
         setUserId("");
         setUserVotes([]);
@@ -103,15 +102,17 @@ function Header({ user }) {
       .then(function (result) {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
-        console.log(token);
-
         // The signed-in user info.
         var user = result.user;
+
+        localStorage.setItem("user", user);
+
         setUserPhotoUrl(user.photoURL);
         setUserName(user.displayName);
         setUserId(user.uid);
         setAuthProvider(user.providerData[0].providerId);
         console.log(userName, "Logged in from Google");
+
         setAuthExists(true);
 
         // getting votes from user logged in
@@ -155,7 +156,9 @@ function Header({ user }) {
         setUserName(user.displayName);
         setUserId(user.uid);
         setAuthProvider(user.providerData[0].providerId);
+
         console.log(userName, "Logged in from Twitter");
+
         setAuthExists(true);
 
         // getting votes from user logged in
@@ -180,6 +183,28 @@ function Header({ user }) {
         var credential = error.credential;
       });
   }
+
+  // firebase.auth().onAuthStateChanged(function (user) {
+  //   if (user) {
+  //     setUserPhotoUrl(user.photoURL);
+  //     setUserName(user.displayName);
+  //     setUserId(user.uid);
+  //     setAuthProvider(user.providerData[0].providerId);
+  //     // getting votes from user logged in
+  //     db.collection("users")
+  //       .doc(user.uid)
+  //       .get()
+  //       .then((response) => {
+  //         setUserVotes(response.data().votes);
+  //       })
+  //       .catch((e) => {
+  //         console.log(e);
+  //       });
+  //     setAuthExists(true);
+  //   } else {
+  //     setAuthExists(false);
+  //   }
+  // });
 
   function UserInfo() {
     return (
@@ -260,8 +285,6 @@ function Header({ user }) {
       </Grid>
     );
   }
-
-  console.log(authExists);
   if (!authExists) {
     return <LoginOptions />;
   } else {
