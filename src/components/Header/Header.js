@@ -28,6 +28,28 @@ function Header({ user }) {
   const [userName, setUserName] = user.userName;
   const [authProvider, setAuthProvider] = user.authProvider;
 
+  // saving states in session storage
+  useEffect(() => {
+    if (sessionStorage.getItem("sessionAuth")) {
+      setUserPhotoUrl(sessionStorage.getItem("userPhotoUrl"));
+      setUserName(sessionStorage.getItem("userName"));
+      setUserId(sessionStorage.getItem("userId"));
+      setAuthProvider(sessionStorage.getItem("authProvider"));
+      db.collection("users")
+        .doc(sessionStorage.getItem("userId"))
+        .get()
+        .then((response) => {
+          setUserVotes(response.data().votes);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      setAuthExists(true);
+    } else {
+      sessionStorage.clear();
+    }
+  }, [authExists]);
+
   function signOut() {
     firebase
       .auth()
@@ -35,6 +57,7 @@ function Header({ user }) {
       .then(function () {
         console.log("Signout successful.");
         setAuthExists(false);
+        sessionStorage.clear();
         setUserId("");
         setUserVotes([]);
       })
@@ -63,6 +86,13 @@ function Header({ user }) {
         setUserId(user.uid);
         setAuthProvider(user.providerData[0].providerId);
         console.log(userName, "Logged in from Facebook");
+
+        sessionStorage.setItem("userPhotoUrl", user.photoURL);
+        sessionStorage.setItem("userName", user.displayName);
+        sessionStorage.setItem("userId", user.uid);
+        sessionStorage.setItem("authProvider", user.providerData[0].providerId);
+
+        sessionStorage.setItem("sessionAuth", true);
         setAuthExists(true);
 
         // getting votes from user logged in
@@ -105,14 +135,18 @@ function Header({ user }) {
         // The signed-in user info.
         var user = result.user;
 
-        localStorage.setItem("user", user);
-
         setUserPhotoUrl(user.photoURL);
         setUserName(user.displayName);
         setUserId(user.uid);
         setAuthProvider(user.providerData[0].providerId);
         console.log(userName, "Logged in from Google");
 
+        sessionStorage.setItem("userPhotoUrl", user.photoURL);
+        sessionStorage.setItem("userName", user.displayName);
+        sessionStorage.setItem("userId", user.uid);
+        sessionStorage.setItem("authProvider", user.providerData[0].providerId);
+
+        sessionStorage.setItem("sessionAuth", true);
         setAuthExists(true);
 
         // getting votes from user logged in
@@ -159,6 +193,12 @@ function Header({ user }) {
 
         console.log(userName, "Logged in from Twitter");
 
+        sessionStorage.setItem("userPhotoUrl", user.photoURL);
+        sessionStorage.setItem("userName", user.displayName);
+        sessionStorage.setItem("userId", user.uid);
+        sessionStorage.setItem("authProvider", user.providerData[0].providerId);
+
+        sessionStorage.setItem("sessionAuth", true);
         setAuthExists(true);
 
         // getting votes from user logged in
