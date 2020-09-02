@@ -28,7 +28,8 @@ function Header({ user }) {
   const [userName, setUserName] = user.userName;
   const [authProvider, setAuthProvider] = user.authProvider;
 
-  // saving states in session storage
+  // hook setting states to values from the sessionstorage
+  // whenever a change in authExists happens
   useEffect(() => {
     if (sessionStorage.getItem("sessionAuth")) {
       setUserPhotoUrl(sessionStorage.getItem("userPhotoUrl"));
@@ -224,28 +225,6 @@ function Header({ user }) {
       });
   }
 
-  // firebase.auth().onAuthStateChanged(function (user) {
-  //   if (user) {
-  //     setUserPhotoUrl(user.photoURL);
-  //     setUserName(user.displayName);
-  //     setUserId(user.uid);
-  //     setAuthProvider(user.providerData[0].providerId);
-  //     // getting votes from user logged in
-  //     db.collection("users")
-  //       .doc(user.uid)
-  //       .get()
-  //       .then((response) => {
-  //         setUserVotes(response.data().votes);
-  //       })
-  //       .catch((e) => {
-  //         console.log(e);
-  //       });
-  //     setAuthExists(true);
-  //   } else {
-  //     setAuthExists(false);
-  //   }
-  // });
-
   function UserInfo() {
     return (
       <Grid container justify="center">
@@ -253,7 +232,9 @@ function Header({ user }) {
           <h1 className={classes.headerTitle}>Coronahilsen</h1>
         </Grid>
         <Grid container justify="center">
-          <h2 className={classes.subHeaderTitle}>Stem på din favorit hilsen</h2>
+          <h2 className={classes.subHeaderTitleLoggedIn}>
+            Stem på din favorit hilsen
+          </h2>
         </Grid>
         <div className={classes.userInfo}>
           <div className={classes.userNameAndProfilePic}>

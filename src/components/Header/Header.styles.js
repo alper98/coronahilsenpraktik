@@ -22,6 +22,12 @@ export default {
   userNameAndProfilePic: {},
   subHeaderTitle: {
     marginTop: "0px",
+    marginBottom: "0px",
+    fontStyle: "italic",
+  },
+  subHeaderTitleLoggedIn: {
+    marginTop: "0px",
+    marginBottom: "10px",
     fontStyle: "italic",
   },
   profilePic: {
