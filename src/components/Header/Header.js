@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 import { makeStyles } from "@material-ui/styles";
 import { Grid } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import { FacebookLoginButton } from "react-social-login-buttons";
@@ -239,7 +238,11 @@ function Header({ user }) {
         <div className={classes.userInfo}>
           <div className={classes.userNameAndProfilePic}>
             <h2 className={classes.loggedInAsTitle}>{userName} </h2>
-            <img src={userPhotoUrl} className={classes.profilePic} />
+            <img
+              src={userPhotoUrl}
+              alt="Profil billede"
+              className={classes.profilePic}
+            />
           </div>
           <div className={classes.logOutBox} onClick={signOut}>
             <h3 className={classes.logOutText}>Log ud</h3>
@@ -306,6 +309,8 @@ function Header({ user }) {
       </Grid>
     );
   }
+
+  // rendering of elements
   if (!authExists) {
     return <LoginOptions />;
   } else {
